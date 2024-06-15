@@ -1,0 +1,23 @@
+{
+    "dive": {
+        "gas_list": [
+            "air",
+            "ean32"
+        ]
+    },
+    "ui": {
+        "colours": {
+            "bg": "0x202020",
+            "panel": "0x101010",
+            "btn_nav": "0x7D7D7D",
+            "btn_focus": "0x8F0505",
+            "gas_enabled": "0xC8C8C8",
+            "gas_disabled": "0x505050"
+        },
+        "screen": {
+            "zoom": 3,
+            "height": 240,
+            "width": 320
+        }
+    }
+}

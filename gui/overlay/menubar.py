@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 import lvgl as lv
 
-import config
+from config import Reader
 
 from .. import navigation
 from ..base_object import labelled_btn
@@ -21,26 +21,24 @@ class MenuBar(Bar):
     Args:
         lv_obj_extended (_type_): _description_
     """
-
-    # Keep a class level instance variable
-    _instance = None
-
-    # Implement MenuBar as a singleton
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(MenuBar, cls).__new__(cls)
-        return cls._instance
-
     # Set class level constants
     HEIGHT = 60
     NAV_BTN_SIZE = 30
     KIND = "MenuBar"
 
-    def __init__(self):
-        super().__init__(height=self.HEIGHT, top=False, kind=self.KIND)
+    def __init__(
+            self,
+            reader: Reader,
+        ):
+        super().__init__(
+            height=self.HEIGHT,
+            top=False,
+            kind=self.KIND,
+            reader=reader,
+        )
 
         # Setup config reader
-        self.reader = config.Reader()
+        self.reader = reader
 
         self.set_style_pad(10, 10 + self.OFFSET, 10, 10)
 
@@ -59,6 +57,9 @@ class MenuBar(Bar):
         self.set_style_pad_column(10, 0)
         self.set_layout(lv.LAYOUT_GRID.value)
 
+        # Update Layout
+        self.update_layout()
+
         # Setup nav buttons
         self.btn_left = self._create_nav_btn(0, lv.SYMBOL.LEFT)
         self.btn_right = self._create_nav_btn(4, lv.SYMBOL.RIGHT)
@@ -66,7 +67,7 @@ class MenuBar(Bar):
         # Setup main buttons
         self.btns = [
             self._create_btn(1),
-            self._create_btn(2, self.reader.values[config.COLOUR_BTN_FOCUS]),
+            self._create_btn(2, self.reader.COLOUR_BTN_FOCUS),
             self._create_btn(3),
         ]
 
@@ -124,12 +125,12 @@ class MenuBar(Bar):
         self, col: int, symbol: str = None  # type: ignore
     ) -> labelled_btn:
         btn = labelled_btn(self, symbol)
-        btn.set_style_bg_color(self.reader.values[config.COLOUR_BTN_NAV], lv.PART.MAIN)
+        btn.set_style_bg_color(self.reader.COLOUR_BTN_NAV, lv.PART.MAIN)
         btn.set_grid_cell(lv.GRID_ALIGN.STRETCH, col, 1, lv.GRID_ALIGN.STRETCH, 0, 1)
         return btn
 
     def _create_btn(
-        self, col: int, colour: lv.color16_t = None  # type: ignore
+        self, col: int, colour: lv.color_t = None  # type: ignore
     ) -> labelled_btn:
         btn = labelled_btn(self, "")
         btn.set_grid_cell(lv.GRID_ALIGN.STRETCH, col, 1, lv.GRID_ALIGN.STRETCH, 0, 1)

@@ -3,16 +3,18 @@ import uasyncio
 import utime
 
 import config
+from drivers import Clock, GasList
 from drivers.display import Unix
-from gui import Controller, base_object
+from gui import Controller, base_object, menu, screens
+from gui.overlay import InfoBar, MenuBar
 
 
 async def allower(interval: int):
-    """A function designed implented to get around a potential bug in the
+    """A function designed implemented to get around a potential bug in the
     unix port of micropython.
 
     When running any async process alongside lvgl any sleep greater than 49ms
-    cause a hang and ne
+    cause a hang
     """
     while 1:
         await uasyncio.sleep_ms(interval)
@@ -20,18 +22,47 @@ async def allower(interval: int):
 
 async def main():
     lv.init()
+
     reader = config.Reader()
-    _ = Unix(reader.values[config.SCREEN_HEIGHT], reader.values[config.SCREEN_WIDTH], 3)
-    controller = Controller()
-    scr = base_object.lv_obj_extended(lv.scr_act())
-    scr.set_size(
-        reader.values[config.SCREEN_WIDTH], reader.values[config.SCREEN_HEIGHT]
+
+    _ = Unix(reader.SCREEN_HEIGHT, reader.SCREEN_WIDTH, reader.SCREEN_ZOOM)
+
+    scr = screens.Backdrop(
+        reader
     )
-    scr.set_style_bg_color(reader.values[config.COLOUR_BG], lv.PART.MAIN)
-    scr.set_style_border_width(0, lv.PART.MAIN)
-    scr.set_style_radius(0, lv.PART.MAIN)
+
+    clock = Clock()
+
+    gas_list = GasList(
+        reader=reader,
+    )
+
+    info_bar = InfoBar(
+        reader=reader,
+        clock=clock,
+    )
+
+    menu_bar = MenuBar(
+        reader=reader,
+    )
+
+    controller = Controller(
+        info_bar=info_bar,
+        menu_bar=menu_bar,
+        clock=clock,
+    )
+
+    home = screens.HomeScreen(
+        screen=scr,
+        controller=controller,
+        gas_list=gas_list,
+        reader=reader,
+    )
+
     uasyncio.create_task(allower(25))
 
+    home.show()
+    
     while 1:
         await uasyncio.sleep(3)
         controller.show_top_layer()

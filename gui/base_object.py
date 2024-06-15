@@ -11,7 +11,7 @@ def set_formatting(
 
 
 class lv_obj_extended(lv.obj):
-    def __init__(self, parent: lv.obj, *args, **kwargs):
+    def __init__(self, parent: lv.obj | None, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.visible = True
         self.scrollable = False

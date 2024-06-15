@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 import lvgl as lv
 
-import config
+from config import Reader
 
 from ..base_object import lv_obj_extended
 
@@ -30,18 +30,24 @@ class Bar(lv_obj_extended):
     OFFSET = 10  # Offset is used to hide the edge of the bar
     KIND = None
 
-    def __init__(self, height: int, top: bool, kind: str):
+    def __init__(
+            self,
+            height: int,
+            top: bool,
+            kind: str,
+            reader: Reader,
+            ):
         super().__init__(lv.layer_top())
 
         self.type = kind
         self.controller = None
         # Setup config reader
 
-        self.reader = config.Reader()
+        self.reader = reader
 
         # Set the normal and hidden positions of the overlay object
         mod = -1 if top else 1
-        scr_height = self.reader.values[config.SCREEN_HEIGHT]
+        scr_height = self.reader.SCREEN_HEIGHT
         normal_pos = mod * (scr_height - height + (self.OFFSET * 2)) // 2
         hidden_pos = mod * (height + scr_height) // 2 - 1
 
@@ -52,7 +58,7 @@ class Bar(lv_obj_extended):
         self._hide_anim = self._create_anim(start=normal_pos, end=hidden_pos)
 
         # Setup object properties
-        self.set_width(self.reader.values[config.SCREEN_WIDTH])
+        self.set_width(self.reader.SCREEN_WIDTH)
         self.set_height(height)
         self.set_x(0)
         self.set_y(normal_pos)
@@ -65,7 +71,7 @@ class Bar(lv_obj_extended):
         top_mod, bottom_mod = (self.OFFSET, 0) if top else (0, self.OFFSET)
         self.set_style_pad(bottom_mod, top_mod, 10, 10)
 
-        self.set_style_bg_color(self.reader.values[config.COLOUR_PANEL], lv.PART.MAIN)
+        self.set_style_bg_color(self.reader.COLOUR_PANEL, lv.PART.MAIN)
         self.update_layout()
 
     def _create_anim(

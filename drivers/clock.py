@@ -11,28 +11,21 @@ import time
 import uasyncio
 
 if TYPE_CHECKING:
-
     class Subscriber(Protocol):
         def update_time(self, time: Tuple[int, int, int, int, int, int, int, int, int]):
             pass
 
 
 class Clock:
-    _instance = None
-
-    # Implement MenuBar as a singleton
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(Clock, cls).__new__(cls)
-        return cls._instance
-
     def __init__(self):
         self.time = time.localtime()
         self._subscribers: List[Subscriber] = []
-        uasyncio.create_task(self.update_time())
 
     def add_subscriber(self, subscriber: Subscriber):
         self._subscribers.append(subscriber)
+
+    def start_timer(self):
+        uasyncio.create_task(self.update_time())
 
     async def update_time(self):
         ticks = time.ticks_ms()

@@ -50,12 +50,12 @@ class MenuBar(lv_obj_extended):
         self.reader = config.Reader()
 
         normal_pos = (
-            self.reader.values[config.SCREEN_HEIGHT] - self.HEIGHT + (self.OFFSET * 2)
+            self.reader.SCREEN_HEIGHT - self.HEIGHT + (self.OFFSET * 2)
         ) // 2
-        hidden_pos = (self.HEIGHT + self.reader.values[config.SCREEN_HEIGHT]) // 2 + 1
+        hidden_pos = (self.HEIGHT + self.reader.SCREEN_HEIGHT) // 2 + 1
 
         # Setup object properties
-        self.set_width(self.reader.values[config.SCREEN_WIDTH])
+        self.set_width(self.reader.SCREEN_WIDTH)
         self.set_height(self.HEIGHT)
         self.set_x(0)
         self.set_y(hidden_pos)
@@ -63,7 +63,7 @@ class MenuBar(lv_obj_extended):
         self.set_align(lv.ALIGN.CENTER)
         self.set_style_border_width(2, lv.PART.MAIN | lv.STATE.DEFAULT)
         self.set_style_pad(10, 10 + self.OFFSET, 10, 10)
-        self.set_style_bg_color(self.reader.values[config.COLOUR_PANEL], lv.PART.MAIN)
+        self.set_style_bg_color(self.reader.COLOUR_PANEL, lv.PART.MAIN)
 
         # Setup layout
         col_dsc = [
@@ -87,7 +87,7 @@ class MenuBar(lv_obj_extended):
         # Setup main buttons
         self.btns = [
             self._create_btn(1),
-            self._create_btn(2, self.reader.values[config.COLOUR_BTN_FOCUS]),
+            self._create_btn(2, self.reader.COLOUR_BTN_FOCUS),
             self._create_btn(3),
         ]
 
@@ -151,7 +151,7 @@ class MenuBar(lv_obj_extended):
         self, col: int, symbol: str = None  # type: ignore
     ) -> labelled_btn:
         btn = labelled_btn(self, symbol)
-        btn.set_style_bg_color(self.reader.values[config.COLOUR_BTN_NAV], lv.PART.MAIN)
+        btn.set_style_bg_color(self.reader.COLOUR_BTN_NAV, lv.PART.MAIN)
         btn.set_grid_cell(lv.GRID_ALIGN.STRETCH, col, 1, lv.GRID_ALIGN.STRETCH, 0, 1)
         return btn
 
