@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
 class Backdrop(lv_obj_extended):
     def __init__(self,reader: Reader):
-        super().__init__(lv.scr_act())
+        super().__init__(lv.screen_active())
         self.set_size(
             reader.SCREEN_WIDTH, reader.SCREEN_HEIGHT
         )

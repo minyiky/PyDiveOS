@@ -25,7 +25,7 @@ class lv_obj_extended(lv.obj):
         if not show:
             self.add_flag(lv.obj.FLAG.HIDDEN)
         else:
-            self.clear_flag(lv.obj.FLAG.HIDDEN)
+            self.remove_flag(lv.obj.FLAG.HIDDEN)
 
     def toggle_visibility(self):
         self.visible = not self.visible
@@ -37,7 +37,7 @@ class lv_obj_extended(lv.obj):
     @scrollable.setter
     def scrollable(self, scroll: bool):
         if not scroll:
-            self.clear_flag(lv.obj.FLAG.SCROLLABLE)
+            self.remove_flag(lv.obj.FLAG.SCROLLABLE)
         else:
             self.add_flag(lv.obj.FLAG.SCROLLABLE)
 
@@ -50,7 +50,7 @@ class lv_obj_extended(lv.obj):
         set_formatting(self, top, bottom, right, left)
 
 
-class labelled_btn(lv.btn):
+class labelled_btn(lv.button):
     def __init__(self, parent, name, id=0):
         super().__init__(parent)
         self._name = name
@@ -74,7 +74,7 @@ class labelled_btn(lv.btn):
         if not show:
             self.add_flag(lv.obj.FLAG.HIDDEN)
         else:
-            self.clear_flag(lv.obj.FLAG.HIDDEN)
+            self.remove_flag(lv.obj.FLAG.HIDDEN)
 
     @property
     def name(self):
@@ -84,7 +84,7 @@ class labelled_btn(lv.btn):
     def name(self, value: str):
         self._name = value
         self.label.set_text(value)
-        lv.event_send(self.label, lv.EVENT.REFRESH, None)
+        self.label.send_event(lv.EVENT.REFRESH, None)
 
     def highlight(self, val):
         if val:

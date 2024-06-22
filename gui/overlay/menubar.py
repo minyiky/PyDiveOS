@@ -55,7 +55,7 @@ class MenuBar(Bar):
         self.set_style_grid_column_dsc_array(col_dsc, 0)
         self.set_style_grid_row_dsc_array(row_dsc, 0)
         self.set_style_pad_column(10, 0)
-        self.set_layout(lv.LAYOUT_GRID.value)
+        self.set_layout(lv.LAYOUT.GRID)
 
         # Update Layout
         self.update_layout()

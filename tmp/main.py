@@ -128,7 +128,7 @@ async def update_time(labels, seconds=False):
 
 
 def physical_btn(parent, align, x, y, size=20):
-    btn = lv.btn(parent)
+    btn = lv.button(parent)
     btn.align(align, x, y)
     btn.set_size(40,40)
     btn.set_style_radius(size//2, lv.PART.MAIN)
@@ -147,7 +147,7 @@ class lv_obj_extended(lv.obj):
 
     @visible.setter
     def visible(self, show):
-        if show==True: self.clear_flag(lv.obj.FLAG.HIDDEN)
+        if show==True: self.remove_flag(lv.obj.FLAG.HIDDEN)
         elif show==False: self.add_flag(lv.obj.FLAG.HIDDEN)
 
     def toggle_visibility(self):
@@ -160,7 +160,7 @@ class lv_obj_extended(lv.obj):
     @scrollable.setter
     def scrollable(self, scroll):
         if scroll==True: self.add_flag(lv.obj.FLAG.SCROLLABLE)
-        elif scroll==False: self.clear_flag(lv.obj.FLAG.SCROLLABLE)
+        elif scroll==False: self.remove_flag(lv.obj.FLAG.SCROLLABLE)
 
     def toggle_scrollability(self):
         self.scrollable = not self.scrollable
@@ -172,7 +172,7 @@ class lv_obj_extended(lv.obj):
         self.set_style_pad_left(left, lv.PART.MAIN)
 
 
-class labled_btn(lv.btn):
+class labled_btn(lv.button):
     def __init__(self, parent, name, id=0):
         super(labled_btn, self).__init__(parent)
         self.name = name
@@ -232,7 +232,7 @@ class HomeScreen(Screen):
         self.set_style_pad_column(0, lv.PART.MAIN)
         self.set_style_pad_row(0, lv.PART.MAIN)
         self.center()
-        self.set_layout(lv.LAYOUT_GRID.value)
+        self.set_layout(lv.LAYOUT.GRID)
         self.update_layout()
         self.x_size = 320//5
         self.y_size = 240//6
@@ -299,7 +299,7 @@ class GasScreen(Screen):
         return cb
 
     def _cb_select(self, event):
-        lv.event_send(self.edit_btns[self.focus_index], lv.EVENT.CLICKED, None)
+        self.edit_btns[self.focus_index].send_event(lv.EVENT.CLICKED, None)
 
     def _cb_edit(self, event):
         GasEdit(self, self.parent, self.focus_index)
@@ -329,7 +329,7 @@ class GasScreen(Screen):
         gas_table = lv.table(self)
         gas_table.set_size(310,180)
         gas_table.align_to(self, lv.ALIGN.CENTER, 0, 0)
-        gas_table.clear_flag(lv.obj.FLAG.SCROLLABLE)
+        gas_table.remove_flag(lv.obj.FLAG.SCROLLABLE)
 
         gas_table.set_row_cnt(self.num_gasses+1)
         gas_table.add_event_cb(self._draw_part_event_cb(), lv.EVENT.DRAW_PART_BEGIN, None)
@@ -442,7 +442,7 @@ class GasEdit(lv_obj_extended):
         return cb
 
     def _cb_edit(self, event):
-        lv.event_send(self.edit_btns[self.focus_index], lv.EVENT.CLICKED, None)
+        self.edit_btns[self.focus_index].send_event(lv.EVENT.CLICKED, None)
 
     def _cb_o2_btn(self, event):
         self.parent.gas_list[self.index].o2 += 0.01
@@ -493,7 +493,7 @@ class PlanningScreen(Screen):
         self.set_style_pad_column(0, lv.PART.MAIN)
         self.set_style_pad_row(0, lv.PART.MAIN)
         self.center()
-        self.set_layout(lv.LAYOUT_GRID.value)
+        self.set_layout(lv.LAYOUT.GRID)
         self.update_layout()
         self.x_size = 320//5
         self.y_size = 240//6
@@ -750,7 +750,7 @@ class MenuBar(lv_obj_extended):
         self.controller = controller
 
         self.visible = False
-        self.clear_flag(lv.obj.FLAG.SCROLLABLE)
+        self.remove_flag(lv.obj.FLAG.SCROLLABLE)
         self.parent = self.get_parent()
         self.set_size(self.parent.get_width(), 40)
         self.set_alignment()
@@ -766,7 +766,7 @@ class MenuBar(lv_obj_extended):
         def _cb_right_btn(event):
             self.next_button()
 
-        left_button = lv.btn(self)
+        left_button = lv.button(self)
         left_button.set_size(20, 20)
         left_button.add_event_cb(_cb_left_btn, lv.EVENT.CLICKED, None)
         left_button.align(lv.ALIGN.CENTER, -140, -5)
@@ -774,7 +774,7 @@ class MenuBar(lv_obj_extended):
         left_label.set_text(lv.SYMBOL.LEFT)
         left_label.align(lv.ALIGN.CENTER,0,0)
 
-        right_button = lv.btn(self)
+        right_button = lv.button(self)
         right_button.set_size(20, 20)
         right_button.add_event_cb(_cb_right_btn, lv.EVENT.CLICKED, None)
         right_button.align(lv.ALIGN.CENTER, 140, -5)
@@ -820,7 +820,7 @@ class MenuBar(lv_obj_extended):
             if i == -1 and num_buttons < 3: continue
             if i == 1 and num_buttons == 1: break
             btn = self.buttons[(i+index)%num_buttons][0]
-            btn.clear_flag(lv.obj.FLAG.HIDDEN)
+            btn.remove_flag(lv.obj.FLAG.HIDDEN)
             btn.align(lv.ALIGN.TOP_MID, i*85, -13)
             if i == 0: 
                 btn.highlight(True)
@@ -863,7 +863,7 @@ class TopBar(lv_obj_extended):
         self.set_size(320, 40)
         self.set_alignment()
         self.set_style_bg_color(lv.color_make(30,30,30), lv.PART.MAIN)
-        self.clear_flag(lv.obj.FLAG.SCROLLABLE)
+        self.remove_flag(lv.obj.FLAG.SCROLLABLE)
 
         self.l_title = lv.label(self)
         self.l_title.set_text('ESPy Dive')
@@ -1006,7 +1006,7 @@ drv.init_gui()
 
 base = Controller()
 base.set_style_bg_color(lv.color_make(1,1,1), lv.PART.MAIN)
-base.clear_flag(base.FLAG.SCROLLABLE)
+base.remove_flag(base.FLAG.SCROLLABLE)
 
 air = Gas(0.21, 0)
 ean32 = Gas(0.32, 0, enabled=False)

@@ -60,7 +60,7 @@ class HomeScreen(Screen):
         self.set_style_pad_column(0, lv.PART.MAIN)
         self.set_style_pad_row(0, lv.PART.MAIN)
         self.center()
-        self.set_layout(lv.LAYOUT_GRID.value)
+        self.set_layout(lv.LAYOUT.GRID)
         self.update_layout()
         self.x_size = 320//5
         self.y_size = 240//6
