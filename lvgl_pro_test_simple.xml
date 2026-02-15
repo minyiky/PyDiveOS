@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lvgl version="1.0">
+  <!-- Simple Hello World test for LVGL Pro -->
+  <screens>
+    <screen id="screen_main" name="Main Screen" color="#000000">
+      <objects>
+        <label id="lbl_hello" name="Hello Label"
+               x="50" y="100" width="200" height="50"
+               text="Hello LVGL Pro!"
+               text_color="#FFFFFF"
+               font_size="24"
+               align="CENTER"/>
+      </objects>
+    </screen>
+  </screens>
+</lvgl>
